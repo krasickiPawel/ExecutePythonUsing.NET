@@ -6,9 +6,15 @@ namespace ExecutePythonUsing.NET
 {
     class Program   //uruchamia skrypt pythona będący kalkulatorem błędu względnego: (abs(wynik - wzorcowyWynik) / wzorcowyWynik) * 100
     {               //skrypt powstał na potrzeby tsp PEA i przyjmuje plik z pomiarami (każdy pomiar w nowej linii) oraz tworzy plik z wartościami błędu względnego
+        public static string errorInfoString = "Podaj poprawną ilość argumentów (5) w kolejności: 1.Interpreter, 2.Skrypt do odpalenia, 3.Plik do odczytu, 4.Plik do zapisu, 5.Liczba względem której chcemy liczyć błąd względny (naj. znane rozw. dla danego rozm. tsp)";
         static void Main(string[] args)         //uruchamiając program z wiersza poleceń lub innego programu (np skryptu Pythona :) ) podać argumenty
         {
-            Console.WriteLine(args.Length);
+            Console.WriteLine("Podano argumentów: " + args.Length);
+            if (args.Length != 5)
+            {
+                Console.WriteLine(errorInfoString);
+                return;
+            }
             string pythonInterpreter = string.Format(@"{0}", args[0]);  //ścieżka do interpretera pythona (zazwyczaj wystarczy "python" jeśli jest zainstalowany)
             string pythonFile = string.Format(@"{0}", args[1]);         //fineName.py - skrypt do uruchomienia 
             Console.WriteLine(args[4]);
@@ -18,7 +24,7 @@ namespace ExecutePythonUsing.NET
             Console.WriteLine(pythonArgs);
 
             string result = RunFromCmd(pythonInterpreter, pythonFile, pythonArgs);          //metoda zwracająca to co python wypisuje poprzez print("sth")
-            Console.WriteLine(result);                                                      //było na testy innego programu, a w przypadku tego kalkulatora jest zbędne
+            Console.WriteLine(result);                                                      //tu dowiadujemy się o wyjątkach jeśli coś zrobimy źle przy podawaniu argumentów
         }
 
         private static string RunFromCmd(string pythonInterpreter, string pythonFile, string pythonArgs)
@@ -48,6 +54,7 @@ namespace ExecutePythonUsing.NET
             }
             catch(Exception e)
             {
+                Console.WriteLine(errorInfoString);
                 throw new Exception("Python program failed: " + result, e);                 //wypisanie błędu (Error) zwróconego przez interpreter pythona
             }
         }
